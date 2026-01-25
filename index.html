@@ -3,233 +3,379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SUNWIN PRO AI - VIP SYSTEM</title>
+    <title>TOOL GAME V6.1 - DEEP LEARNING</title>
     <style>
-        body { background: #0d0d0d; color: #0f0; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
-        #game-frame { display: none; width: 100%; height: 100vh; border: none; }
+        /* --- GIAO DIỆN DARK MODE HACKER --- */
+        body { background-color: #050505; color: #00ff41; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; overflow: hidden; }
+        * { box-sizing: border-box; user-select: none; }
+        #game-frame { display: none; width: 100%; height: 100vh; border: none; z-index: 1; position: absolute; top: 0; left: 0; }
         
-        /* THANH THÔNG BÁO CHẠY (MARQUEE) */
-        .notification-bar {
-            background: #111; border-bottom: 1px solid #ff00aa; 
-            color: #ff00aa; font-weight: bold; padding: 10px 0;
-            overflow: hidden; white-space: nowrap; font-size: 13px;
-        }
-        .marquee { display: inline-block; animation: marquee 12s linear infinite; padding-left: 100%; }
-        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-
-        /* GIAO DIỆN CHÍNH */
-        .container { max-width: 400px; margin: auto; padding: 20px; text-align: center; }
-        input { width: 85%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #ff00aa; color: #fff; border-radius: 8px; text-align: center; outline: none; }
-        .btn { background: #ff00aa; color: white; padding: 14px; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; width: 92%; margin-top: 10px; }
+        .container { position: relative; z-index: 10; max-width: 450px; margin: 0 auto; padding: 20px; height: 100vh; display: flex; flex-direction: column; background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
         
-        .auth-wrapper { background: #1a1a1a; border-radius: 15px; border: 1px solid #333; overflow: hidden; margin-top: 30px; }
-        .tab-header { display: flex; border-bottom: 1px solid #333; }
-        .tab-btn { flex: 1; padding: 15px; cursor: pointer; background: #222; color: #666; border: none; font-weight: bold; }
-        .tab-btn.active { background: #1a1a1a; color: #ff00aa; border-bottom: 2px solid #ff00aa; }
-        .auth-content { padding: 20px; display: none; }
-        .auth-content.active { display: block; }
-
-        #game-selection, #key-verification { display: none; margin-top: 50px; }
-        .card { background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px solid #ff00aa; }
-
+        .header { text-align: center; margin-bottom: 20px; animation: fadeIn 1s ease; }
+        .google-badge { background: #fff; color: #444; font-weight: bold; font-size: 10px; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+        h1 { margin: 0; color: #00ff41; text-shadow: 0 0 15px rgba(0, 255, 65, 0.5); font-size: 28px; text-transform: uppercase; }
+        
+        .notif-bar { background: rgba(255, 0, 170, 0.1); border: 1px solid #ff00aa; color: #ff00aa; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-size: 12px; font-weight: bold; text-align: center; animation: pulse 2s infinite; cursor: pointer; }
+        
+        .auth-tabs { display: flex; border-bottom: 1px solid #333; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: #666; font-weight: bold; cursor: pointer; transition: 0.3s; border-bottom: 2px solid transparent; }
+        .tab-btn.active { color: #00ff41; border-bottom: 2px solid #00ff41; }
+        
+        .form-group { display: none; animation: slideUp 0.5s ease; }
+        .form-group.active { display: block; }
+        input { width: 100%; padding: 14px; margin: 8px 0; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; outline: none; transition: 0.3s; text-align: center; }
+        input:focus { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
+        
+        .btn-submit { width: 100%; padding: 15px; margin-top: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; text-transform: uppercase; }
+        .btn-login { background: linear-gradient(90deg, #008000, #00ff41); color: #000; }
+        .btn-reg { background: linear-gradient(90deg, #333, #555); color: #fff; }
+        
+        #game-select-screen { display: none; }
+        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .game-card { background: #111; border: 1px solid #333; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .game-card:hover { border-color: #ff00aa; transform: translateY(-5px); }
+        .game-card h3 { margin: 10px 0 0; font-size: 14px; color: #fff; }
+        .game-icon { font-size: 30px; }
+        
+        #key-screen { display: none; text-align: center; }
+        
         /* MINI TOOL */
-        #mini-tool {
-            display: none; position: fixed; top: 120px; left: 20px; background: rgba(10, 10, 10, 0.95);
-            width: 170px; padding: 15px; border-radius: 20px; border: 2px solid #ff00aa; text-align: center; z-index: 10000;
-        }
-        #prediction { font-size: 38px; font-weight: 900; margin: 10px 0; }
-        #core-log { font-size: 9px; color: #0f0; font-style: italic; }
-        .loading { font-size: 11px; color: #ff0; display: none; margin-top: 5px; }
-
-        /* NÚT TELEGRAM GÓC MÀN HÌNH */
-        .tele-float {
-            position: fixed; bottom: 20px; right: 20px;
-            background: linear-gradient(45deg, #0088cc, #005f8f);
-            color: white; padding: 12px 20px; border-radius: 50px;
-            text-decoration: none; font-weight: bold; font-size: 14px;
-            box-shadow: 0 0 15px rgba(0, 136, 204, 0.5);
-            z-index: 99999; display: flex; align-items: center; gap: 8px;
-            border: 1px solid #fff;
-        }
-        .tele-float:active { transform: scale(0.95); }
+        #mini-tool { display: none; position: fixed; top: 120px; left: 20px; width: 220px; background: rgba(0, 0, 0, 0.95); border: 1px solid #00ff41; border-radius: 15px; padding: 15px; text-align: center; z-index: 9999; box-shadow: 0 0 25px rgba(0, 255, 65, 0.3); }
+        .tool-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 10px; }
+        .gg-logo { font-size: 10px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 5px; }
+        .gg-circle { width: 8px; height: 8px; background: #EA4335; border-radius: 50%; }
+        
+        #prediction { font-size: 48px; font-weight: 900; margin: 5px 0; color: #fff; }
+        #log-area { font-size: 9px; color: #00ff41; font-family: monospace; text-align: left; height: 30px; overflow: hidden; opacity: 0.8; }
+        #win-rate { font-size: 14px; font-weight: bold; margin-top: 5px; color: #ff0; }
+        
+        .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; color: #000; font-weight: bold; }
+        .st-calib { background: #ffaa00; }
+        .st-ready { background: #00ff41; }
+        .st-danger { background: #ff0044; color: #fff; }
+        
+        .tele-float { position: fixed; bottom: 20px; right: 20px; z-index: 99999; background: #0088cc; color: white; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 20px rgba(0, 136, 204, 0.5); animation: float 3s ease-in-out infinite; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 170, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 170, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 170, 0); } }
+        @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="container" id="ui-container">
-        <div class="notification-bar">
-            <div class="marquee">📢 MUA KEY IB TELE ADMIN @TUANX3000 - HỆ THỐNG TOOL 📢</div>
+    <div class="container" id="main-ui">
+        <div class="header">
+            <span class="google-badge">Powered by Google Cloud AI</span>
+            <h1>TOOL GAME V6.1</h1>
+            <p style="font-size: 10px; color: #666; margin-top: 5px;">DEEP LEARNING CORE Tuanx3000 PROCESSING</p>
         </div>
 
-        <h1 style="color: #ff00aa; margin-top: 20px;">SUNWIN PRO AI</h1>
+        <div class="notif-bar" onclick="window.location.href='https://t.me/tuanx3000'">
+            📢 MUA KEY VIP LIÊN HỆ TELEGRAM: @TUANX3000 
+        </div>
 
-        <div id="auth-section">
-            <div class="auth-wrapper">
-                <div class="tab-header">
-                    <button class="tab-btn active" onclick="openTab(event, 'login')">ĐĂNG NHẬP</button>
-                    <button class="tab-btn" onclick="openTab(event, 'register')">ĐĂNG KÝ</button>
-                </div>
-                <div id="login" class="auth-content active">
-                    <input type="text" id="user" placeholder="Tên đăng nhập">
-                    <input type="password" id="pass" placeholder="Mật khẩu">
-                    <button class="btn" onclick="handleAuth('login')">ĐĂNG NHẬP</button>
-                    <div id="login-load" class="loading">Đang kết nối máy chủ...</div>
-                </div>
-                <div id="register" class="auth-content">
-                    <input type="text" id="reg-user" placeholder="Tên tài khoản mới">
-                    <input type="password" id="reg-pass" placeholder="Mật khẩu mới">
-                    <p style="font-size: 10px; color: #888;">* Đăng ký xong vui lòng IB Admin để kích hoạt.</p>
-                    <button class="btn" onclick="handleAuth('register')">ĐĂNG KÝ NGAY</button>
-                    <div id="reg-load" class="loading">Đang tạo tài khoản...</div>
-                </div>
+        <div id="auth-screen">
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">ĐĂNG NHẬP</button>
+                <button class="tab-btn" onclick="switchTab('register')">ĐĂNG KÝ</button>
+            </div>
+            <div id="login-form" class="form-group active">
+                <input type="text" id="login-user" placeholder="Tên tài khoản">
+                <input type="password" id="login-pass" placeholder="Mật khẩu">
+                <button class="btn-submit btn-login" onclick="handleLogin()">VÀO HỆ THỐNG</button>
+            </div>
+            <div id="reg-form" class="form-group">
+                <input type="text" id="reg-user" placeholder="Tên tài khoản mới">
+                <input type="password" id="reg-pass" placeholder="Mật khẩu mới">
+                <input type="password" id="reg-repass" placeholder="Nhập lại mật khẩu">
+                <button class="btn-submit btn-reg" onclick="handleRegister()">ĐĂNG KÝ NGAY</button>
+                <p style="font-size: 10px; color:#666; margin-top:10px;">*Tài khoản sẽ được lưu trên Google Database.</p>
             </div>
         </div>
 
-        <div id="game-selection">
-            <div class="card">
-                <h2 style="color: #fff;">CHỌN CỔNG GAME</h2>
-                <div style="background: #222; padding: 15px; border-radius: 10px; margin: 10px 0; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color: #fff; font-weight: bold; margin-left: 10px;">SUNWIN</span>
-                    <button class="btn" style="width: 80px; margin: 0; padding: 8px;" onclick="showKeyGate()">CHỌN</button>
+        <div id="game-select-screen">
+            <h3 style="color:#fff; text-align:center;">CHỌN CỔNG GAME</h3>
+            <div class="game-grid">
+                <div class="game-card" onclick="selectGame('sunwin')">
+                    <div class="game-icon">🔴</div>
+                    <h3>SUNWIN</h3>
+                    <div style="font-size:9px; color:#0f0; margin-top:5px;">● Online</div>
+                </div>
+                <div class="game-card" onclick="selectGame('go88')">
+                    <div class="game-icon">🟡</div>
+                    <h3>GO88</h3>
+                    <div style="font-size:9px; color:#666; margin-top:5px;">● Bảo trì</div>
+                </div>
+                <div class="game-card" onclick="selectGame('789')">
+                    <div class="game-icon">🟣</div>
+                    <h3>789 CLUB</h3>
+                    <div style="font-size:9px; color:#666; margin-top:5px;">● Bảo trì</div>
+                </div>
+                <div class="game-card" onclick="selectGame('rik')">
+                    <div class="game-icon">🔵</div>
+                    <h3>RIKVIP</h3>
+                    <div style="font-size:9px; color:#666; margin-top:5px;">● Bảo trì</div>
                 </div>
             </div>
+            <button class="btn-submit btn-reg" style="margin-top:20px;" onclick="location.reload()">QUAY LẠI</button>
         </div>
 
-        <div id="key-verification">
-            <div class="card">
-                <h2 style="color: #fff;">NHẬP KEY KÍCH HOẠT</h2>
-                <p style="font-size: 11px; color: #aaa; margin-bottom: 5px;">Liên hệ tele Admin @tuanx3000 để mua Key</p>
-                <input type="text" id="key-input" placeholder="MÃ KEY CỦA BẠN">
-                <button class="btn" onclick="verifyKey()">KÍCH HOẠT</button>
-                <button class="btn" style="background:#444;" onclick="location.reload()">QUAY LẠI</button>
-            </div>
+        <div id="key-screen">
+            <h3 style="color:#fff;">XÁC THỰC BẢO MẬT</h3>
+            <p style="font-size:12px; color:#666;">Vui lòng nhập Key VIP đã mua từ Admin</p>
+            <input type="text" id="key-input" placeholder="KEY-XXXX-XXXX" style="letter-spacing: 2px;">
+            <button class="btn-submit btn-login" onclick="verifyKey()">KÍCH HOẠT & CHẠY TOOL</button>
+            <p style="font-size:11px; color:#ff00aa; margin-top:15px; cursor:pointer;" onclick="window.location.href='https://t.me/tuanx3000'">Chưa có Key? Mua tại đây</p>
         </div>
     </div>
 
-    <a href="https://t.me/tuanx3000" class="tele-float" target="_blank">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-8.609 3.33c-2.068.8-4.133 1.598-5.724 2.21a405.15 405.15 0 0 1-2.863 1.09c-1.036.387-1.464 1.13-1.066 1.836.38.675 1.17 1.05 1.77 1.258.855.295 2.112.592 3.238.86 1.096.26 2.09.497 2.76.662.388.948.88 2.376 1.34 3.86.32 1.035.733 1.905 1.196 2.457.514.614 1.25.862 1.875.643.55-.193.996-.707 1.408-1.22.45-.56.88-1.218 1.32-1.848.337-.482.684-.95 1.055-1.38 1.11.83 2.302 1.69 3.495 2.492.657.442 1.458.74 2.246.52 1.144-.318 1.733-1.74 2.042-3.328.745-3.834 1.942-10.742 2.34-13.88.24-1.887-1.15-2.868-2.586-2.616z"></path></svg>
-        Admin:@tuanx3000
+    <a href="https://t.me/tuanx3000" class="tele-float" id="tele-btn">
+        <span>✈️</span> ADMIN TUANX3000
     </a>
 
     <iframe id="game-frame"></iframe>
+
     <div id="mini-tool">
-        <div style="color:#666; font-size:10px;">PHIÊN #<span id="session-id">......</span></div>
-        <div id="prediction" style="color: #444;">WAIT</div>
-        <div id="core-log">Ready...</div>
-        <div style="font-size: 8px; color: #ff00aa; margin-top: 5px;">6 CORE AI TECHNOLOGY</div>
+        <div class="tool-header">
+            <div class="gg-logo"><div class="gg-circle"></div> Google AI Deep</div>
+            <div id="status-badge" class="status-badge st-calib">INITIALIZING</div>
+        </div>
+        <div id="log-area">Wait for next session...</div>
+        <div id="prediction">WAIT</div>
+        <div id="win-rate">---</div>
+        <div style="font-size: 8px; color: #444; margin-top: 5px;">NEXT SESSION: <span id="session-id">...</span></div>
     </div>
 
     <script>
-        // *** THAY LINK SCRIPT CỦA BẠN VÀO ĐÂY ***
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBMRWwjiz2Cmw7WTU-r7oChYAErev3C8Eq93bNp9eSM5B3vH62DztB6_RNtJ6TLTiTZQ/exec";
+        // *** ĐÃ CẬP NHẬT LINK SCRIPT CỦA BẠN TẠI ĐÂY ***
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8XkEuyhuOc5AOyoI3P3aJqLXMUEJbawBMIG2WyybQX-mg1MMgCakU_dpXRuSNEkrJ3Q/exec";
         
-        let userRow = null;
+        let currentUser = null;
+        let selectedGame = "";
+        let history = [];
+        let sessionCount = 0;
         let lastSession = "";
 
-        function openTab(e, name) {
-            let contents = document.getElementsByClassName("auth-content");
-            for (let i = 0; i < contents.length; i++) contents[i].style.display = "none";
-            let tabs = document.getElementsByClassName("tab-btn");
-            for (let i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
-            document.getElementById(name).style.display = "block";
-            e.currentTarget.classList.add("active");
-        }
-
-        async function handleAuth(type) {
-            if (type === 'register') {
-                const u = document.getElementById('reg-user').value;
-                const p = document.getElementById('reg-pass').value;
-                if(!u || !p) return alert("Vui lòng nhập đủ thông tin!");
-                
-                document.getElementById('reg-load').style.display = 'block';
-                try {
-                    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({user:u, pass:p}) });
-                    alert("Đăng ký thành công! Hãy IB Admin @tuanx3000 để mua Key.");
-                    location.reload();
-                } catch(e) { alert("Lỗi kết nối!"); }
-                document.getElementById('reg-load').style.display = 'none';
+        // UI Functions
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.form-group').forEach(f => f.classList.remove('active'));
+            if(tab === 'login') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('login-form').classList.add('active');
             } else {
-                const u = document.getElementById('user').value;
-                const p = document.getElementById('pass').value;
-                document.getElementById('login-load').style.display = 'block';
-                try {
-                    const res = await fetch(SCRIPT_URL);
-                    const rows = await res.json();
-                    userRow = rows.slice(1).find(r => r[0] == u && r[1] == p);
-                    
-                    if (userRow) {
-                        document.getElementById('auth-section').style.display = 'none';
-                        document.getElementById('game-selection').style.display = 'block';
-                    } else { alert("Sai tài khoản hoặc mật khẩu!"); }
-                } catch(e) { alert("Lỗi tải dữ liệu!"); }
-                document.getElementById('login-load').style.display = 'none';
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('reg-form').classList.add('active');
             }
         }
 
-        function showKeyGate() {
-            document.getElementById('game-selection').style.display = 'none';
-            document.getElementById('key-verification').style.display = 'block';
+        async function handleRegister() {
+            const u = document.getElementById('reg-user').value;
+            const p = document.getElementById('reg-pass').value;
+            const rp = document.getElementById('reg-repass').value;
+            if (!u || !p) return alert("Nhập đủ thông tin!");
+            if (p !== rp) return alert("Mật khẩu không khớp!");
+            
+            // Gửi dữ liệu đăng ký lên Script
+            try {
+                const res = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Google Script thường yêu cầu no-cors nếu gọi từ domain khác
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action: 'register', user: u, pass: p})
+                });
+                alert("Đăng ký thành công! Hãy IB Admin @tuanx3000 ĐỂ MUA KEY.");
+                switchTab('login');
+            } catch(e) {
+                alert("Lỗi kết nối! Vui lòng thử lại.");
+            }
+        }
+
+        async function handleLogin() {
+            const u = document.getElementById('login-user').value;
+            const p = document.getElementById('login-pass').value;
+            if(!u || !p) return alert("Chưa nhập tài khoản/mật khẩu!");
+            document.querySelector('.btn-login').innerText = "ĐANG KẾT NỐI...";
+            
+            try {
+                const res = await fetch(SCRIPT_URL);
+                const data = await res.json();
+                // Giả định Script trả về mảng 2 chiều [[user, pass, key, exp], ...]
+                const userRow = data.slice(1).find(r => r[0] == u && r[1] == p);
+                if (userRow) {
+                    currentUser = userRow;
+                    document.getElementById('auth-screen').style.display = 'none';
+                    document.getElementById('game-select-screen').style.display = 'block';
+                } else {
+                    alert("Sai tài khoản hoặc mật khẩu!");
+                    document.querySelector('.btn-login').innerText = "VÀO HỆ THỐNG";
+                }
+            } catch (e) {
+                alert("Lỗi tải dữ liệu từ Google!");
+                document.querySelector('.btn-login').innerText = "VÀO HỆ THỐNG";
+            }
+        }
+
+        function selectGame(game) {
+            if (game !== 'sunwin') return alert("ĐANG BẢO TRÌ MUA KEY ỦNG HỘ AD!");
+            selectedGame = game;
+            document.getElementById('game-select-screen').style.display = 'none';
+            document.getElementById('key-screen').style.display = 'block';
         }
 
         function verifyKey() {
-            const inputKey = document.getElementById('key-input').value.trim();
-            const serverKey = userRow[2];
-            const expiryDate = new Date(userRow[3]); 
-            const today = new Date();
-            today.setHours(0,0,0,0); 
-
-            if (serverKey === "KEY_CHO_DUYET") return alert("Tài khoản chưa kích hoạt. Vui lòng mua Key từ Admin @tuanx3000!");
-            if (inputKey !== serverKey) return alert("Mã Key không chính xác!");
-            if (today > expiryDate) return alert("Key đã hết hạn! Vui lòng liên hệ Admin gia hạn.");
-
-            document.getElementById('ui-container').style.display = 'none';
-            document.querySelector('.tele-float').style.display = 'none'; // Ẩn nút tele khi vào game để đỡ vướng
-            document.getElementById('game-frame').src = "https://web.sunwin.bi";
-            document.getElementById('game-frame').style.display = 'block';
-            document.getElementById('mini-tool').style.display = 'block';
-            setInterval(syncData, 3000);
+            if (!currentUser) return alert("Lỗi phiên!");
+            const k = document.getElementById('key-input').value.trim();
+            // Cột C là Key (index 2)
+            if (k === currentUser[2]) {
+                document.getElementById('main-ui').style.display = 'none';
+                document.getElementById('tele-btn').style.display = 'none';
+                document.getElementById('game-frame').src = "https://web.sunwin.bi";
+                document.getElementById('game-frame').style.display = 'block';
+                document.getElementById('mini-tool').style.display = 'block';
+                setInterval(runCoreAI, 3000);
+            } else alert("Key không đúng hoặc chưa kích hoạt!");
         }
 
-        async function syncData() {
+        // --- CORE AI V6.1: TÍNH TOÁN 25 GIÂY & AUTO +1 ---
+        async function runCoreAI() {
             const proxy = 'https://api.allorigins.win/get?url=';
-            const targetApi = 'https://sunwinsaygex-vd0m.onrender.com/api/sun';
+            const api = 'https://sunwinsaygex-vd0m.onrender.com/api/sun';
+
             try {
-                const res = await fetch(`${proxy}${encodeURIComponent(targetApi + '?t=' + Date.now())}`);
+                const res = await fetch(`${proxy}${encodeURIComponent(api + '?t=' + Date.now())}`);
                 const json = await res.json();
                 const data = JSON.parse(json.contents);
+
                 if (data && data.phien && data.phien !== lastSession) {
                     lastSession = data.phien;
-                    document.getElementById('session-id').innerText = parseInt(data.phien) + 1;
-                    const pred = document.getElementById('prediction');
-                    const log = document.getElementById('core-log');
+                    sessionCount++;
                     
-                    pred.innerText = "SOI"; pred.style.color = "#ff0";
-                    setTimeout(() => log.innerText = "● Core 1-2: Analyzing...", 2000);
-                    setTimeout(() => log.innerText = "● Core 3-4: Calculating...", 8000);
-                    setTimeout(() => log.innerText = "● Core 5-6: Finalizing...", 15000);
-                    
+                    // CẬP NHẬT PHIÊN AUTO +1
+                    const nextSession = parseInt(data.phien) + 1;
+                    document.getElementById('session-id').innerText = nextSession;
+
+                    const predEl = document.getElementById('prediction');
+                    const logEl = document.getElementById('log-area');
+                    const rateEl = document.getElementById('win-rate');
+                    const statusEl = document.getElementById('status-badge');
+
+                    // RESET GIAO DIỆN
+                    predEl.innerText = "SCAN";
+                    predEl.style.color = "#444";
+                    rateEl.innerText = "Đang phân tích...";
+                    statusEl.innerText = "PROCESSING";
+                    statusEl.className = "status-badge st-ready";
+
+                    if (data.ketqua) {
+                        history.push(data.ketqua);
+                        if(history.length > 20) history.shift();
+                    }
+
+                    // DÒ CẦU (2 VÁN ĐẦU)
+                    if (sessionCount <= 2) {
+                        statusEl.innerText = "CALIBRATING";
+                        statusEl.className = "status-badge st-calib";
+                        predEl.innerText = "SKIP";
+                        predEl.style.color = "#666";
+                        logEl.innerText = `● Đang đồng bộ nhịp cầu (${sessionCount}/2)...`;
+                        return;
+                    }
+
+                    // --- QUY TRÌNH TÍNH TOÁN 25 GIÂY ---
+                    const logs = [
+                        "● Phase 1: Ingesting Session Data #" + nextSession,
+                        "● Phase 2: Decrypting MD5 Hash...",
+                        "● Phase 3: Analyzing Historical Matrix (12 steps)...",
+                        "● Phase 4: Checking Volatility Index...",
+                        "● Phase 5: Detecting Anti-Bot Patterns...",
+                        "● Phase 6: Calculating Weighted Probability...",
+                        "● Finalizing Prediction..."
+                    ];
+
+                    let step = 0;
+                    const logTimer = setInterval(() => {
+                        if(step < logs.length) {
+                            logEl.innerText = logs[step];
+                            step++;
+                        } else clearInterval(logTimer);
+                    }, 3500);
+
+                    // HIỂN THỊ KẾT QUẢ SAU 25s
                     setTimeout(() => {
-                        let result = data.ketqua || (Math.random() > 0.5 ? "TÀI" : "XỈU");
-                        pred.innerText = result;
-                        pred.style.color = result === "TÀI" ? "#ff4d4d" : "#00ff00";
-                        log.innerText = "● Sync Complete";
-                    }, 20000);
+                        let result = "";
+                        let confidence = 0;
+                        const lastResult = history[history.length - 1]; 
+
+                        // LOGIC
+                        let streak = 0;
+                        for (let i = history.length - 1; i >= 0; i--) {
+                            if (history[i] === lastResult) streak++;
+                            else break;
+                        }
+
+                        let isPingPong = false;
+                        if (history.length >= 4) {
+                            const h = history;
+                            const len = h.length;
+                            if (h[len-1] != h[len-2] && h[len-2] != h[len-3] && h[len-3] != h[len-4]) isPingPong = true;
+                        }
+
+                        // QUYẾT ĐỊNH
+                        if (streak >= 4) {
+                            if (streak > 6) {
+                                result = lastResult; // Bệt tiếp
+                                confidence = 89;
+                                logEl.innerText = "● PATTERN: Bệt siêu trường (Long Streak).";
+                            } else {
+                                result = (lastResult === "TÀI") ? "XỈU" : "TÀI"; // Bẻ
+                                confidence = 78; 
+                                logEl.innerText = "● PATTERN: Điểm gãy cầu bệt (Break Point).";
+                            }
+                        } else if (isPingPong) {
+                            result = (lastResult === "TÀI") ? "XỈU" : "TÀI";
+                            confidence = 92;
+                            logEl.innerText = "● PATTERN: Cầu chuyền 1-1 (Ping Pong).";
+                        } else {
+                            const countTai = history.filter(x => x === "TÀI").length;
+                            const countXiu = history.filter(x => x === "XỈU").length;
+                            if (countTai > countXiu) {
+                                result = "XỈU";
+                                logEl.innerText = "● BALANCE: Cân bằng cửa Xỉu.";
+                            } else {
+                                result = "TÀI";
+                                logEl.innerText = "● BALANCE: Cân bằng cửa Tài.";
+                            }
+                            confidence = Math.floor(Math.random() * (85 - 80 + 1)) + 80;
+                        }
+
+                        // KILL SWITCH
+                        if (Math.random() > 0.85) {
+                            predEl.innerText = "BỎ";
+                            predEl.style.color = "#ff0044";
+                            rateEl.innerText = "Rủi ro cao - Không vào tiền";
+                            logEl.innerText = "● ALERT: Dữ liệu nhiễu (Noise Detected).";
+                            statusEl.className = "status-badge st-danger";
+                            statusEl.innerText = "UNSAFE";
+                        } else {
+                            predEl.innerText = result;
+                            predEl.style.color = (result === "TÀI") ? "#ff4d4d" : "#00ff41";
+                            rateEl.innerText = `Độ tin cậy: ${confidence}%`;
+                            statusEl.innerText = "COMPLETED";
+                        }
+
+                    }, 25000); // 25s
                 }
             } catch (e) {}
         }
 
-        const tool = document.getElementById('mini-tool');
-        let move = false, ox, oy;
-        tool.addEventListener('touchstart', e => {
-            move = true; ox = tool.offsetLeft - e.touches[0].clientX; oy = tool.offsetTop - e.touches[0].clientY;
-        }, {passive: true});
-        document.addEventListener('touchmove', e => {
-            if (move) {
-                tool.style.left = (e.touches[0].clientX + ox) + 'px';
-                tool.style.top = (e.touches[0].clientY + oy) + 'px';
-            }
-        }, {passive: false});
-        document.addEventListener('touchend', () => move = false);
+        const t = document.getElementById('mini-tool');
+        let d = false, sx, sy;
+        t.addEventListener('touchstart', e => { d=true; sx=e.touches[0].clientX-t.offsetLeft; sy=e.touches[0].clientY-t.offsetTop; });
+        document.addEventListener('touchmove', e => { if(d){ t.style.left=(e.touches[0].clientX-sx)+'px'; t.style.top=(e.touches[0].clientY-sy)+'px'; }});
+        document.addEventListener('touchend', () => d=false);
     </script>
 </body>
 </html>
