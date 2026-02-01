@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOOL GAME V6.1 - DEEP LEARNING</title>
+    <title>TOOL GAME V7 - DEEP LEARNING</title>
     <style>
         /* --- GIAO DIỆN DARK MODE HACKER --- */
         body { background-color: #050505; color: #00ff41; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; overflow: hidden; }
@@ -61,6 +61,19 @@
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 170, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 170, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 170, 0); } }
         @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+
+        /* Styles from MD5 Predictor integrated */
+        #md5-tool { display: none; position: fixed; top: 120px; right: 20px; width: 220px; background: rgba(0,0,0,0.96); border: 2px double #ff0044; border-radius: 16px; padding: 16px; box-shadow: 0 0 40px rgba(255,0,68,0.55); text-align: center; user-select: none; z-index: 9999; }
+        .md5-title { font-size: 12px; font-weight: bold; color: #ff0044; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .md5-subtitle { font-size: 9px; color: #777; margin: 6px 0 12px; }
+        #md5hash { width: 92%; padding: 8px; font-size: 11px; background: #0f0f0f; color: #ddd; border: 1px solid #444; border-radius: 6px; outline: none; font-family: Consolas, monospace; }
+        #md5hash:focus { border-color: #ff0044; box-shadow: 0 0 8px rgba(255,0,68,0.4); }
+        #md5-loading { display: none; margin: 14px 0; }
+        .md5-loading-text { font-size: 9px; color: #22ff88; margin-bottom: 8px; }
+        .md5-progress-bar { background: #222; height: 6px; border-radius: 3px; overflow: hidden; }
+        #md5-progress { width: 0%; height: 100%; background: linear-gradient(90deg, #ff0044, #ff6600); transition: width 9.5s linear; }
+        #md5-result { display: none; font-size: 58px; font-weight: 900; margin: 10px 0; min-height: 70px; line-height: 1; }
+        #md5-confidence { font-size: 10px; color: #ffcc00; min-height: 20px; }
     </style>
 </head>
 <body>
@@ -68,7 +81,7 @@
     <div class="container" id="main-ui">
         <div class="header">
             <span class="google-badge">Powered by Google Cloud AI</span>
-            <h1>TOOL GAME V6.1</h1>
+            <h1>TOOL GAME V7</h1>
             <p style="font-size: 10px; color: #666; margin-top: 5px;">DEEP LEARNING CORE Tuanx3000 PROCESSING</p>
         </div>
 
@@ -103,10 +116,10 @@
                     <h3>SUNWIN</h3>
                     <div style="font-size:9px; color:#0f0; margin-top:5px;">● Online</div>
                 </div>
-                <div class="game-card" onclick="selectGame('go88')">
+                <div class="game-card" onclick="selectGame('luck8')">
                     <div class="game-icon">🟡</div>
-                    <h3>GO88</h3>
-                    <div style="font-size:9px; color:#666; margin-top:5px;">● Bảo trì</div>
+                    <h3>Luck8</h3>
+                    <div style="font-size:9px; color:#0f0; margin-top:5px;">● Online</div>
                 </div>
                 <div class="game-card" onclick="selectGame('789')">
                     <div class="game-icon">🟣</div>
@@ -146,6 +159,24 @@
         <div id="prediction">WAIT</div>
         <div id="win-rate">---</div>
         <div style="font-size: 8px; color: #444; margin-top: 5px;">NEXT SESSION: <span id="session-id">...</span></div>
+    </div>
+
+    <!-- Integrated MD5 Predictor Panel -->
+    <div id="md5-tool">
+      <div class="md5-title">8-CORE OCTA ENGINE v2</div>
+      <div class="md5-subtitle">INPUT MD5 HASH</div>
+      
+      <input type="text" id="md5hash" placeholder="Dán mã MD5 32 ký tự..." maxlength="32" />
+      
+      <div id="md5-loading">
+        <div class="md5-loading-text">ĐANG XỬ LÝ QUA 8 LÕI...</div>
+        <div class="md5-progress-bar">
+          <div id="md5-progress"></div>
+        </div>
+      </div>
+      
+      <div id="md5-result">--</div>
+      <div id="md5-confidence">SYSTEM READY</div>
     </div>
 
     <script>
@@ -219,7 +250,7 @@
         }
 
         function selectGame(game) {
-            if (game !== 'sunwin') return alert("ĐANG BẢO TRÌ MUA KEY ỦNG HỘ AD!");
+            if (game !== 'sunwin' && game !== 'luck8') return alert("ĐANG BẢO TRÌ MUA KEY ỦNG HỘ AD!");
             selectedGame = game;
             document.getElementById('game-select-screen').style.display = 'none';
             document.getElementById('key-screen').style.display = 'block';
@@ -232,15 +263,21 @@
             if (k === currentUser[2]) {
                 document.getElementById('main-ui').style.display = 'none';
                 document.getElementById('tele-btn').style.display = 'none';
-                document.getElementById('game-frame').src = "https://web.sunwin.bi";
+                if (selectedGame === 'sunwin') {
+                    document.getElementById('game-frame').src = "https://web.sunwin.fo";
+                    document.getElementById('mini-tool').style.display = 'block';
+                    setInterval(runCoreAI, 3000);
+                } else if (selectedGame === 'luck8') {
+                    document.getElementById('game-frame').src = "https://kenxs.are2are2.com/mobile/#/userCenter/index"; // Giả định URL cho Luck8, thay đổi nếu cần
+                    document.getElementById('md5-tool').style.display = 'block';
+                }
                 document.getElementById('game-frame').style.display = 'block';
-                document.getElementById('mini-tool').style.display = 'block';
-                setInterval(runCoreAI, 3000);
             } else alert("Key không đúng hoặc chưa kích hoạt!");
         }
 
-        // --- CORE AI V6.1: TÍNH TOÁN 25 GIÂY & AUTO +1 ---
+        // --- CORE AI V7: TÍNH TOÁN 25 GIÂY & AUTO +1 ---
         async function runCoreAI() {
+            if (selectedGame !== 'sunwin') return; // Chỉ chạy cho Sunwin
             const proxy = 'https://api.allorigins.win/get?url=';
             const api = 'https://sunwinsaygex-vd0m.onrender.com/api/sun';
 
@@ -371,11 +408,86 @@
             } catch (e) {}
         }
 
+        // Draggable for mini-tool
         const t = document.getElementById('mini-tool');
         let d = false, sx, sy;
         t.addEventListener('touchstart', e => { d=true; sx=e.touches[0].clientX-t.offsetLeft; sy=e.touches[0].clientY-t.offsetTop; });
         document.addEventListener('touchmove', e => { if(d){ t.style.left=(e.touches[0].clientX-sx)+'px'; t.style.top=(e.touches[0].clientY-sy)+'px'; }});
         document.addEventListener('touchend', () => d=false);
+
+        // Integrated MD5 Predictor Script
+        const md5_input    = document.getElementById('md5hash');
+        const md5_loading  = document.getElementById('md5-loading');
+        const md5_progress = document.getElementById('md5-progress');
+        const md5_resultEl = document.getElementById('md5-result');
+        const md5_confEl   = document.getElementById('md5-confidence');
+
+        md5_input.oninput = function() {
+          let val = this.value.trim().toLowerCase().replace(/[^0-9a-f]/g, '');
+          this.value = val; // chỉ giữ hex
+
+          if (val.length !== 32) return;
+
+          // Khóa input & chạy giả lập
+          md5_input.disabled = true;
+          md5_loading.style.display = 'block';
+          md5_resultEl.style.display = 'none';
+          md5_confEl.textContent = '8 LÕI ĐANG ĐỒNG THUẬN...';
+          md5_progress.style.width = '100%';
+
+          setTimeout(() => {
+            // Logic 8 lõi (giả lập vui)
+            let sum = 0;
+            for (let c of val) {
+              sum += '0123456789abcdef'.indexOf(c);
+            }
+
+            const votes = [
+              sum % 2,
+              (sum + val.charCodeAt(0)) % 2,
+              val.length % 2,
+              (sum * 7) % 2,
+              (parseInt(val.slice(4,8), 16) % 2) || 0,
+              (parseInt(val.slice(12,16), 16) % 2) || 0,
+              (val.charCodeAt(31) + sum) % 2,
+              sum % 3 === 0 ? 1 : 0
+            ];
+
+            const score = votes.reduce((a,b)=>a+b, 0);
+            const avg = score / 8;
+            const isTai = avg >= 0.5;
+            const percent = Math.round(isTai ? avg*100 : (1-avg)*100);
+
+            // Hiển thị kết quả
+            md5_loading.style.display = 'none';
+            md5_resultEl.style.display = 'block';
+            md5_resultEl.textContent = isTai ? 'TÀI' : 'XỈU';
+            md5_resultEl.style.color = isTai ? '#ffdd00' : '#00eaff';
+            md5_confEl.textContent = `ĐỘ TIN CẬY: ${percent}%`;
+
+            // Reset sau 4 giây
+            setTimeout(() => {
+              md5_input.disabled = false;
+              md5_input.value = '';
+              md5_resultEl.textContent = '--';
+              md5_confEl.textContent = 'CHỜ INPUT MỚI';
+              md5_progress.style.width = '0%';
+            }, 4000);
+
+          }, 9500);
+        };
+
+        // Focus ngay khi load (for Luck8)
+        if (selectedGame === 'luck8') {
+          md5_input.focus();
+        }
+
+        // Draggable for md5-tool
+        const md5_t = document.getElementById('md5-tool');
+        let md5_d = false, md5_sx, md5_sy;
+        md5_t.addEventListener('touchstart', e => { md5_d=true; md5_sx=e.touches[0].clientX-md5_t.offsetLeft; md5_sy=e.touches[0].clientY-md5_t.offsetTop; });
+        document.addEventListener('touchmove', e => { if(md5_d){ md5_t.style.left=(e.touches[0].clientX-md5_sx)+'px'; md5_t.style.top=(e.touches[0].clientY-md5_sy)+'px'; }});
+        document.addEventListener('touchend', () => md5_d=false);
     </script>
 </body>
 </html>
